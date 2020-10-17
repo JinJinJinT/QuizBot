@@ -2,8 +2,9 @@
   "name": "quizbot",
   "version": "0.0.0",
   "description": "A Twitch bot that collects quiz data",
-  "main": "index.js",
+  "main": "src",
   "scripts": {
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/JinJinJinT/QuizBot/issues"
   },
-  "homepage": "https://github.com/JinJinJinT/QuizBot#readme"
+  "homepage": "https://github.com/JinJinJinT/QuizBot#readme",
+  "dependencies": {
+    "yarn": "^1.22.10"
+  }
 }
