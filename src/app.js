@@ -1,4 +1,5 @@
 import tmi from 'tmi.js'
+import { BOT_USERNAME, CHANNEL_NAME, OAUTH_TOKEN } from './constants';
 
 const client = new tmi.Client({
 	options: { debug: true },
@@ -7,10 +8,10 @@ const client = new tmi.Client({
 		secure: true
 	},
 	identity: {
-		username: 'quizbot',
-		password: 'oauth:jd8o89z5ucuzps1ooxmyornq4m7owh'
+		username: BOT_USERNAME,
+		password: OAUTH_TOKEN
 	},
-	channels: [ 'j_xx_n' ]
+	channels: [ CHANNEL_NAME ]
 });
 client.connect().catch(console.error);
 client.on('message', (channel, userstate, message, self) => {
