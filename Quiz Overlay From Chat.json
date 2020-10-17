@@ -9,17 +9,17 @@
       "configurationAnchor": "panel",
       "displayChannelName": "j_xx_n",
       "features": {
-        "isBitsEnabled": true,
-        "isChatEnabled": true,
-        "isSubscriptionStatusAvailable": true
+        "isBitsEnabled": false,
+        "isChatEnabled": false,
+        "isSubscriptionStatusAvailable": false
       },
       "frameSize": {
         "width": 1280,
         "height": 720
       },
       "id": "1",
-      "isPopout": true,
-      "label": "nice",
+      "isPopout": false,
+      "label": "",
       "linked": false,
       "linkedUserId": "",
       "orientation": "Portrait",
