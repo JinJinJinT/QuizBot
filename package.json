@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/JinJinJinT/QuizBot#readme",
   "dependencies": {
+    "axios": "^0.20.0",
+    "express": "^4.17.1",
+    "jade": "^1.11.0",
+    "request": "^2.88.2",
     "tmi.js": "^1.5.0",
     "yarn": "^1.22.10"
   }

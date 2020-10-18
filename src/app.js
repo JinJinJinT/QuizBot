@@ -1,5 +1,7 @@
 import tmi from 'tmi.js'
 import { BOT_USERNAME, CHANNEL_NAME, OAUTH_TOKEN, KEYWORDS } from './constants';
+import fs from 'fs'
+import parse from './parse'
 
 const options = {
     options: { debug: true },
@@ -17,8 +19,12 @@ const client = new tmi.Client(options)
 let activeQuizStatus = false
 let currentQuizStart = -1
 let currentQuizTime = -1
-let currentOptions = []
-
+let currentData = {
+    "question": "",
+    "options": [],
+    "votes": {}
+}
+let votes = []
 client.connect().catch(console.error);
 
 client.on('message', (channel, userstate, message, self) => {
@@ -29,6 +35,28 @@ client.on('message', (channel, userstate, message, self) => {
     if (activeQuizStatus && !timeValid()) {
         client.say(channel, `Quiz is over!`)
         activeQuizStatus = false;
+        const callback = (parsed)=>{
+            console.log(typeof parsed)
+            console.log('parsed:,',parsed)
+            currentData.votes = parsed
+            console.log(currentData)
+            //to label json file
+            let date = new Date()
+            fs.writeFile(`C:\\Users\\makot\\OneDrive\\Documents\\GitHub\\quizbotData\\quizData${date.getDate()+date.getTime()}.json`, JSON.stringify(currentData), (err)=>{
+                if (err) console.log('Problem writing json data')
+                else {
+                    console.log('Quiz stored successfully')
+                }
+            })
+        }
+        //parsing the data w/ api
+        let parsed = parse.parse({"texts":votes}, callback)
+        console.log(parsed)
+        votes = []
+
+        
+
+        
     }
     checkTwitchChat(userstate, message, channel)
 
@@ -53,11 +81,14 @@ function checkTwitchChat(username, message, channel){
             //check if parameters are valid
             if (checkParam(answers, time, channel)) {
                 createActiveQuiz(question, answers, time, channel)
+                currentData.question = question
+                currentData.options = answers
             }
         } else if(activeQuizStatus && message.includes(KEYWORDS[1])) {
             //get the data
-            message = message.substring(message.indexOf(':') + 1).trim()
-            client.say(channel, `@${username.username} voted ${message}`)            
+            message = message.substring(message.indexOf('!') + 1).trim()
+            votes.push(message)
+            client.say(channel, `@${username.username} voted ${message}`)           
         }
     }
 }
@@ -84,26 +115,27 @@ function createActiveQuiz(question, options, time, channel){
     let now = new Date();
     currentQuizStart = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds()
     currentQuizTime = time
-    currentOptions = options
     client.say(channel, `Quiz Created: ${question}`)
+    client.say(channel, `Options: ${options}`)
     client.say(channel, `Quiz is active for ${time} seconds!`)
 }
 
 function timeValid() {
+    let times = currentQuizStart.split(':')
     let now = new Date()
-    let newSecond = now.getSeconds() - currentQuizStart.substring(6, 8)
+    let newSecond = now.getSeconds() - times[2]
     let newMin = now.getMinutes();
     if (newSecond < 0) {
         newMin -= 1
         newSecond = 60 + newSecond
     }
-    newMin -= currentQuizStart.substring(3, 5)
+    newMin -= times[1]
     let newHour = now.getHours()
     if (newMin < 0) {
         newHour -= 1
         newMin = 60 + newMin
     }
-    newHour -= currentQuizStart.substring(0, 2)
+    newHour -= times[0]
     let seconds = (newHour * 60 * 60) + (newMin * 60) + newSecond
     return seconds < currentQuizTime
     
