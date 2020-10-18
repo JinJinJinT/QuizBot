@@ -19,6 +19,7 @@
   "homepage": "https://github.com/JinJinJinT/QuizBot#readme",
   "dependencies": {
     "axios": "^0.20.0",
+    "d3": "^6.2.0",
     "express": "^4.17.1",
     "jade": "^1.11.0",
     "request": "^2.88.2",
